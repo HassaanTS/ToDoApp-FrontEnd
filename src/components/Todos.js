@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ReactPaginate from 'react-paginate';
-import TodoEdit from './TodoEdit'
-import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { fetchRecords, updateRecord, deleteRecord } from '../requests/request'
+import TodoInput from './TodoInput';
 
 function Todos({todos}) {
 
-    const updateDone = (item) => {
+    const [edit, setEdit] = useState({_id: null, value: null});
+
+    const todoStatus = (item) => {
         const done = !item.done
         const data = {done:done}
         updateRecord(item._id, data);
@@ -22,11 +23,10 @@ function Todos({todos}) {
         deleteRecord(item);
         window.location.reload(true);
     }
-
-    const updateToDo = () => {
-
+    
+    if (edit._id){
+        return <TodoInput edit={edit}/>
     }
-
 
     return (
         // <p>{todos.length}</p>
@@ -36,24 +36,19 @@ function Todos({todos}) {
                 <p>{todo.desc}</p>
                 <p>{todo.date}</p>
                 <div className='status'>
-                    {todo.done ? <AiFillCheckCircle onClick={() => updateDone(todo)}/> : <AiOutlineCheckCircle onClick={() => updateDone(todo)}/>}
+                    {todo.done ? <AiFillCheckCircle onClick={() => todoStatus(todo)}/> : <AiOutlineCheckCircle onClick={() => todoStatus(todo)}/>}
                 </div>
                 <div className='delete'>
                     <AiOutlineDelete  onClick={() => removeToDo(todo._id)} className='delete-icon'/>
                 </div>
                 <div className='update'>
-                    <AiOutlineEdit className='edit-icon'/>
+                    <AiOutlineEdit onClick={() => setEdit({_id: todo._id, value: todo})} className='edit-icon'/>
                 </div>
 
                 <br/>
                 <br/>
                 
             </div>
-            // {/* <TodoItems 
-            //     key={todo._id}
-            //     todo={todo}
-            //     completeToDo={completeToDo}
-            // /> */}
         ))
     )
 };

@@ -19,18 +19,19 @@ async function fetchRecords(){
 }
 
 // POST new record
-async function fetchRecords1(){
+async function createRecord(data){
     const config = {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
         },
     };
-    const url = baseURL + '/api/v1/get_todos'
+    const url = baseURL + '/api/v1/create_todo'
 
-    return axios.get(url, config).then(response => response.data).catch(error => {
+    const res =  axios.post(url, data, config).then(response => response.data).catch(error => {
         console.log('error: ', error)
     });
+    console.log('update response: ', res)
 }
 
 // PUT an updated record
@@ -65,4 +66,4 @@ async function deleteRecord(id, data){
     console.log('update response: ', res)
 }
 
-export {fetchRecords, updateRecord, deleteRecord};
+export {createRecord, fetchRecords, updateRecord, deleteRecord};

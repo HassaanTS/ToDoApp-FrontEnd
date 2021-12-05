@@ -1,15 +1,24 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import {createRecord, updateRecord} from '../requests/request'
 
 function TodoInput(props) {
+    let todo = null
+    Object.entries(props).map(([key, value]) => {
+        todo = value.value
+    });
 
-    // const [input, setInput] = useState(props.edit ? props.edit.value : '');
+
+    const inputRef = useRef(null)
+    useEffect(() => {
+        inputRef.current.focus()
+      })
 
     // properties for new record
-    const [titleInput, setTitleInput] = useState('')
-    const [descInput, setDescInput] = useState('')
-    const [startDate, setStartDate] = useState(new Date());
+    const [titleInput, setTitleInput] = useState(props.edit ? todo.title : '');
+    const [descInput, setDescInput] = useState(props.edit ? todo.desc : '');
+    const [startDate, setStartDate] = useState(props.edit ? new Date(todo.date) : new Date());
     const todoTitleInput = useRef('');
     const todoDescInput = useRef('');
 
@@ -21,41 +30,108 @@ function TodoInput(props) {
         setDescInput(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleEditSubmit = (e) => {
+        //send all data fields one by one to update
         e.preventDefault()
-        console.log(todoTitleInput.current.value)
-        console.log(todoDescInput.current.value)
-        console.log('date: ', startDate)
-        // make packet and send here
+
+        // send title
+        const title = {
+            title: todoTitleInput.current.value,
+        }
+        updateRecord(todo._id, title)
+
+        // send desc
+        const desc = {
+            desc: todoDescInput.current.value,
+        }
+        updateRecord(todo._id, desc)
+
+        // send date
+        const date = startDate.getFullYear()+'-'+((startDate.getMonth()+1) >= 10 ? (startDate.getMonth()+1) : '0'+(startDate.getMonth()+1))+'-'+(startDate.getDate() >= 10 ? (startDate.getDate()) : '0'+startDate.getDate())
+        const dueDate = {
+            date: date,
+        }
+        updateRecord(todo._id, dueDate)
+ 
+        window.location.reload(true);
+    }
+
+    const handleNewSubmit = (e) => {
+        e.preventDefault()
+
+        const date = startDate.getFullYear()+'-'+((startDate.getMonth()+1) >= 10 ? (startDate.getMonth()+1) : '0'+(startDate.getMonth()+1))+'-'+(startDate.getDate() >= 10 ? (startDate.getDate()) : '0'+startDate.getDate())
+        // send new record
+        const data = {
+            title: todoTitleInput.current.value,
+            desc: todoDescInput.current.value,
+            date: date,
+            done: false
+        }
+        createRecord(data)
+        // clear inputs
         setTitleInput('');
         setDescInput('');
+        window.location.reload(true);
     };
 
     return (
-        <form className='todo-form' onSubmit={handleSubmit}>
-            <div className='input form'>
-                <input       
-                    type='text'
-                    placeholder='Add a todo'
-                    name='title'
-                    value={titleInput}
-                    className='todo-input title'
-                    onChange={handleTitleChange}
-                    ref={todoTitleInput}
-                />
-                <input       
-                    type='text'
-                    placeholder='Describe your todo'
-                    name='desc'
-                    value={descInput}
-                    className='todo-input desc'
-                    onChange={handleDescChange}
-                    ref={todoDescInput}
-                />
-                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-                <button className='todo-button'>Add</button>
-            </div>
-        </form>
+        // <form className='todo-form'>
+        <>
+            {props.edit ? 
+                (<>
+                <form className='todo-form-edit' onSubmit={handleEditSubmit}>
+                    <div className='input-form-edit' ref={inputRef}>
+                        <input       
+                            type='text'
+                            placeholder='Update todo'
+                            name='title'
+                            value={titleInput}
+                            className='todo-input title'
+                            onChange={handleTitleChange}
+                            ref={todoTitleInput}
+                        />
+                        <input       
+                            type='text'
+                            placeholder='Describe your todo'
+                            name='desc'
+                            value={descInput}
+                            className='todo-input desc'
+                            onChange={handleDescChange}
+                            ref={todoDescInput}
+                        />
+                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                        <button className='todo-button-edit'>Edit</button>
+                    </div>
+                    </form>
+                </>) : 
+                (<>
+                    <form className='todo-form-edit' onSubmit={handleNewSubmit}>
+                    <div className='input-form' ref={inputRef}>
+                        <input       
+                            type='text'
+                            placeholder='Add a todo'
+                            name='title'
+                            value={titleInput}
+                            className='todo-input title'
+                            onChange={handleTitleChange}
+                            ref={todoTitleInput}
+                        />
+                        <input       
+                            type='text'
+                            placeholder='Describe your todo'
+                            name='desc'
+                            value={descInput}
+                            className='todo-input desc'
+                            onChange={handleDescChange}
+                            ref={todoDescInput}
+                        />
+                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                        <button className='todo-button'>Add</button>
+                    </div>
+                    </form>
+                </>)}
+            </>
+        // </form>
     )
 }
 
