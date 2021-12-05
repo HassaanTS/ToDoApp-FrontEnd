@@ -31,30 +31,29 @@ function TodoInput(props) {
     };
 
     const handleEditSubmit = (e) => {
-        //send all data fields one by one to update
-        e.preventDefault()
+        e.preventDefault();
 
         // send title
         const title = {
             title: todoTitleInput.current.value,
         }
-        updateRecord(todo._id, title)
+        updateRecord(todo._id, title);
 
         // send desc
         const desc = {
             desc: todoDescInput.current.value,
         }
-        updateRecord(todo._id, desc)
+        updateRecord(todo._id, desc);
 
         // send date
         const date = startDate.getFullYear()+'-'+((startDate.getMonth()+1) >= 10 ? (startDate.getMonth()+1) : '0'+(startDate.getMonth()+1))+'-'+(startDate.getDate() >= 10 ? (startDate.getDate()) : '0'+startDate.getDate())
         const dueDate = {
             date: date,
         }
-        updateRecord(todo._id, dueDate)
+        updateRecord(todo._id, dueDate);
  
         window.location.reload(true);
-    }
+    };
 
     const handleNewSubmit = (e) => {
         e.preventDefault()
@@ -74,13 +73,36 @@ function TodoInput(props) {
         window.location.reload(true);
     };
 
+    const handlePopulate = (e) => {
+        var data = null
+
+        e.preventDefault()
+
+        const date = startDate.getFullYear()+'-'+((startDate.getMonth()+1) >= 10 ? (startDate.getMonth()+1) : '0'+(startDate.getMonth()+1))+'-'+(startDate.getDate() >= 10 ? (startDate.getDate()) : '0'+startDate.getDate())
+    
+        for (let i = 0; i < 10; i++) {
+            data = {
+                title: 'Pre-loaded ToDo task'+(i+1),
+                desc: 'Pre-loaded ToDo description for task'+(i+1),
+                date: date,
+                done: false
+            }
+            createRecord(data);
+          }
+
+        // clear inputs
+        setTitleInput('');
+        setDescInput('');
+        window.location.reload(true);
+    };
+
     return (
         // <form className='todo-form'>
         <>
             {props.edit ? 
                 (<>
-                <form className='todo-form-edit' onSubmit={handleEditSubmit}>
-                    <div className='input-form-edit' ref={inputRef}>
+                <div className='input-form-edit' ref={inputRef}>
+                    <form className='todo-form-edit' onSubmit={handleEditSubmit}>
                         <input       
                             type='text'
                             placeholder='Update todo'
@@ -101,10 +123,12 @@ function TodoInput(props) {
                         />
                         <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
                         <button className='todo-button-edit'>Edit</button>
-                    </div>
                     </form>
+                    <button className='todo-button-cancel-edit' onClick={() => {window.location.reload(true);}}>Cancel</button>
+                </div>
                 </>) : 
                 (<>
+                    <button className='pre-populate' onClick={handlePopulate}>Populate</button>
                     <form className='todo-form-edit' onSubmit={handleNewSubmit}>
                     <div className='input-form' ref={inputRef}>
                         <input       
