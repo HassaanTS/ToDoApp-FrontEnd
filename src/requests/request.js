@@ -14,7 +14,7 @@ async function fetchRecords(){
     const url = baseURL + '/api/v1/get_todos'
 
     return axios.get(url, config).then(response => response.data).catch(error => {
-        console.log('error: ', error)
+        alert('error: ', error)
     });
 }
 
@@ -29,7 +29,7 @@ async function createRecord(data){
     const url = baseURL + '/api/v1/create_todo'
 
     const res =  axios.post(url, data, config).then(response => response.data).catch(error => {
-        console.log('error: ', error)
+        alert('error: ', error)
     });
     console.log('update response: ', res)
 }
@@ -45,7 +45,7 @@ async function updateRecord(id, data){
     const url = baseURL + '/api/v1/update_todo/' + id
 
     const res = axios.put(url, data, config).then(response => response.data).catch(error => {
-        console.log('error: ', error)
+        alert('error: ', error)
     });
     console.log('update response: ', res)
 }
@@ -61,7 +61,7 @@ async function deleteRecord(id, data){
     const url = baseURL + '/api/v1/delete_todo/' + id
 
     const res = axios.delete(url, config).then(response => response.data).catch(error => {
-        console.log('error: ', error)
+        alert('error: ', error)
     });
     console.log('update response: ', res)
 }

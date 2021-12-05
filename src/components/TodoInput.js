@@ -4,12 +4,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import {createRecord, updateRecord} from '../requests/request'
 
 function TodoInput(props) {
+    // load data from props
     let todo = null
     Object.entries(props).map(([key, value]) => {
         todo = value.value
     });
 
 
+    // focus current 
     const inputRef = useRef(null)
     useEffect(() => {
         inputRef.current.focus()
@@ -66,7 +68,11 @@ function TodoInput(props) {
             date: date,
             done: false
         }
-        createRecord(data)
+        // create no new entry if no title is present
+        if (data.title!==''){
+            createRecord(data);
+        }
+
         // clear inputs
         setTitleInput('');
         setDescInput('');
@@ -79,7 +85,7 @@ function TodoInput(props) {
         e.preventDefault()
 
         const date = startDate.getFullYear()+'-'+((startDate.getMonth()+1) >= 10 ? (startDate.getMonth()+1) : '0'+(startDate.getMonth()+1))+'-'+(startDate.getDate() >= 10 ? (startDate.getDate()) : '0'+startDate.getDate())
-    
+        // send some fake data
         for (let i = 0; i < 10; i++) {
             data = {
                 title: 'Pre-loaded ToDo task'+(i+1),
@@ -88,74 +94,81 @@ function TodoInput(props) {
                 done: false
             }
             createRecord(data);
-          }
-
-        // clear inputs
-        setTitleInput('');
-        setDescInput('');
+        }
+        
         window.location.reload(true);
     };
 
     return (
-        // <form className='todo-form'>
         <>
             {props.edit ? 
                 (<>
-                <div className='input-form-edit' ref={inputRef}>
+                <div className='input-div-edit' ref={inputRef}>
                     <form className='todo-form-edit' onSubmit={handleEditSubmit}>
-                        <input       
-                            type='text'
-                            placeholder='Update todo'
-                            name='title'
-                            value={titleInput}
-                            className='todo-input title'
-                            onChange={handleTitleChange}
-                            ref={todoTitleInput}
-                        />
-                        <input       
-                            type='text'
-                            placeholder='Describe your todo'
-                            name='desc'
-                            value={descInput}
-                            className='todo-input desc'
-                            onChange={handleDescChange}
-                            ref={todoDescInput}
-                        />
-                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-                        <button className='todo-button-edit'>Edit</button>
+                        <div className='todo-edit-inputs'>
+                            <input       
+                                type='text'
+                                placeholder='Update todo'
+                                name='title'
+                                value={titleInput}
+                                className='todo-input title'
+                                onChange={handleTitleChange}
+                                ref={todoTitleInput}
+                            />
+                            <br/>
+                            <input       
+                                type='text'
+                                placeholder='Describe your todo'
+                                name='desc'
+                                value={descInput}
+                                className='todo-input desc'
+                                onChange={handleDescChange}
+                                ref={todoDescInput}
+                            />
+                            <DatePicker className='date-picker' selected={startDate} onChange={(date) => setStartDate(date)} />
+                            <button className='todo-button-edit'>Edit</button>
+                        </div>
                     </form>
                     <button className='todo-button-cancel-edit' onClick={() => {window.location.reload(true);}}>Cancel</button>
                 </div>
                 </>) : 
                 (<>
-                    <button className='pre-populate' onClick={handlePopulate}>Populate</button>
-                    <form className='todo-form-edit' onSubmit={handleNewSubmit}>
-                    <div className='input-form' ref={inputRef}>
-                        <input       
-                            type='text'
-                            placeholder='Add a todo'
-                            name='title'
-                            value={titleInput}
-                            className='todo-input title'
-                            onChange={handleTitleChange}
-                            ref={todoTitleInput}
-                        />
-                        <input       
-                            type='text'
-                            placeholder='Describe your todo'
-                            name='desc'
-                            value={descInput}
-                            className='todo-input desc'
-                            onChange={handleDescChange}
-                            ref={todoDescInput}
-                        />
-                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-                        <button className='todo-button'>Add</button>
+                    <div className='input-div-new'>
+                        <div className='pre-poulate-div'>
+                            <br/>
+                            <div></div>
+                            <button className='pre-populate' onClick={handlePopulate}>Populate</button>
+                            <div></div>
+                            <br/>
+                        </div>
+                        <form className='todo-form-edit' onSubmit={handleNewSubmit}>
+                        <div className='input-form' ref={inputRef}>
+                            <input       
+                                type='text'
+                                placeholder='Add a todo'
+                                name='title'
+                                value={titleInput}
+                                className='todo-input title'
+                                onChange={handleTitleChange}
+                                ref={todoTitleInput}
+                            />
+                            <br/>
+                            <input       
+                                type='text'
+                                placeholder='Describe your todo'
+                                name='desc'
+                                value={descInput}
+                                className='todo-input desc'
+                                onChange={handleDescChange}
+                                ref={todoDescInput}
+                            />
+                            <DatePicker className='date-picker' selected={startDate} onChange={(date) => setStartDate(date)} />
+                            <button className='todo-button'>Add</button>
+                        </div>
+                        </form>
                     </div>
-                    </form>
                 </>)}
             </>
-        // </form>
     )
 }
 
