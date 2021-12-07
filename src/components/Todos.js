@@ -33,6 +33,8 @@ function Todos({todos}) {
             style: {
                 backgroundColor: 'lightblue',
                 color: '#5c5c64',
+                fontWeight: 'bold',
+                fontSize: 15,
             },
             wrap: true,
             sortable: true,
