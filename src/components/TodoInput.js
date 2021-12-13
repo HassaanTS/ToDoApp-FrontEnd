@@ -32,32 +32,32 @@ function TodoInput(props) {
         setDescInput(e.target.value);
     };
 
-    const handleEditSubmit = (e) => {
+    const handleEditSubmit = async (e) => {
         e.preventDefault();
 
         // send title
         const title = {
             title: todoTitleInput.current.value,
         }
-        updateRecord(todo._id, title);
+        await updateRecord(todo._id, title);
 
         // send desc
         const desc = {
             desc: todoDescInput.current.value,
         }
-        updateRecord(todo._id, desc);
+        await updateRecord(todo._id, desc);
 
         // send date
         const date = startDate.getFullYear()+'-'+((startDate.getMonth()+1) >= 10 ? (startDate.getMonth()+1) : '0'+(startDate.getMonth()+1))+'-'+(startDate.getDate() >= 10 ? (startDate.getDate()) : '0'+startDate.getDate())
         const dueDate = {
             date: date,
         }
-        updateRecord(todo._id, dueDate);
+        await updateRecord(todo._id, dueDate);
  
         window.location.reload(true);
     };
 
-    const handleNewSubmit = (e) => {
+    const handleNewSubmit = async (e) => {
         e.preventDefault()
 
         const date = startDate.getFullYear()+'-'+((startDate.getMonth()+1) >= 10 ? (startDate.getMonth()+1) : '0'+(startDate.getMonth()+1))+'-'+(startDate.getDate() >= 10 ? (startDate.getDate()) : '0'+startDate.getDate())
@@ -70,7 +70,7 @@ function TodoInput(props) {
         }
         // create no new entry if no title is present
         if (data.title!==''){
-            createRecord(data);
+            await createRecord(data);
         }
 
         // clear inputs
@@ -79,7 +79,7 @@ function TodoInput(props) {
         window.location.reload(true);
     };
 
-    const handlePopulate = (e) => {
+    const handlePopulate = async (e) => {
         var data = null
 
         e.preventDefault()
@@ -93,7 +93,7 @@ function TodoInput(props) {
                 date: date,
                 done: false
             }
-            createRecord(data);
+            await createRecord(data);
         }
         
         window.location.reload(true);

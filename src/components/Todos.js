@@ -12,18 +12,18 @@ function Todos({todos}) {
     const [edit, setEdit] = useState({_id: null, value: null});
 
     // handle the status toggling and backend update of a todo
-    const statusToDo = (item) => {
+    const statusToDo = async (item) => {
         const done = !item.done
         const data = {done:done}
-        updateRecord(item._id, data);
+        await updateRecord(item._id, data);
         window.location.reload(true);
-    }
+    };
 
     // make a call pn backend to delete todo
-    const removeToDo = (item) => {
-        deleteRecord(item);
+    const removeToDo = async (item) => {
+        await deleteRecord(item);
         window.location.reload(true);
-    }
+    };
 
     // column definition for data-table
     const columns = [
