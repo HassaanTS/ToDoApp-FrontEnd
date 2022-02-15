@@ -11,7 +11,7 @@ function App() {
   const [addTodo, setAddTodo] = useState(false)
 
 
-  // lod up the todos when the page loads
+  // load up the todos when the page loads
   useEffect(() => {
     const getTodos = async () => {
       const res = await fetchRecords();
